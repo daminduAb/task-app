@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block title %}Edit Task{% endblock %}
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-md-7">
+    <div class="card shadow-sm">
+      <div class="card-body">
+        <h2 class="mb-4">Edit Task</h2>
+        <form method="POST">
+          {{ form.hidden_tag() }}
+          <div class="mb-3">{{ form.title.label(class="form-label") }} {{ form.title(class="form-control") }}</div>
+          <div class="mb-3">{{ form.description.label(class="form-label") }} {{ form.description(class="form-control", rows="4") }}</div>
+          <div class="mb-3">{{ form.status.label(class="form-label") }} {{ form.status(class="form-select") }}</div>
+          {{ form.submit(class="btn btn-primary") }}
+          <a href="{{ url_for('dashboard') }}" class="btn btn-secondary">Back</a>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

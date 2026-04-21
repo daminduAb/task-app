@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block title %}Home - TaskFlow{% endblock %}
+{% block content %}
+<div class="p-5 mb-4 bg-light rounded-3 shadow-sm">
+  <div class="container-fluid py-4">
+    <h1 class="display-5 fw-bold">TaskFlow</h1>
+    <p class="col-md-8 fs-5">
+      A full Python Flask task management app with Docker, PostgreSQL, DevOps, and monitoring.
+    </p>
+    <a href="{{ url_for('register') }}" class="btn btn-primary btn-lg">Get Started</a>
+  </div>
+</div>
+{% endblock %}

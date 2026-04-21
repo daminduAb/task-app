@@ -9,11 +9,20 @@ from forms import RegisterForm, LoginForm, TaskForm
 
 app = Flask(__name__)
 
+# Secret key
 app.config["SECRET_KEY"] = os.getenv("SECRET_KEY", "dev-secret-change-this")
-app.config["SQLALCHEMY_DATABASE_URI"] = os.getenv(
-    "DATABASE_URL",
-    "postgresql://postgres:postgres@db:5432/taskflow"
-)
+
+# Database config
+# Works for:
+# 1. Render Postgres
+# 2. Local SQLite fallback
+# 3. postgres:// URLs that need conversion
+database_url = os.getenv("DATABASE_URL", "sqlite:///taskflow.db")
+
+if database_url.startswith("postgres://"):
+    database_url = database_url.replace("postgres://", "postgresql://", 1)
+
+app.config["SQLALCHEMY_DATABASE_URI"] = database_url
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
 db.init_app(app)
@@ -78,12 +87,14 @@ def register():
         existing_user = User.query.filter(
             (User.email == form.email.data) | (User.username == form.username.data)
         ).first()
+
         if existing_user:
             flash("Username or email already exists.", "danger")
             return redirect(url_for("register"))
 
         user = User(username=form.username.data, email=form.email.data)
         user.set_password(form.password.data)
+
         db.session.add(user)
         db.session.commit()
 
@@ -101,6 +112,7 @@ def login():
     form = LoginForm()
     if form.validate_on_submit():
         user = User.query.filter_by(email=form.email.data).first()
+
         if user and user.check_password(form.password.data):
             login_user(user)
             flash("Logged in successfully.", "success")
@@ -123,6 +135,7 @@ def logout():
 @login_required
 def dashboard():
     form = TaskForm()
+
     if form.validate_on_submit():
         task = Task(
             title=form.title.data,

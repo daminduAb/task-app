@@ -26,9 +26,9 @@ jobs:
 
       - name: Syntax check
         run: |
-          python -m py_compile taskflow/app.py
+          python -m py_compile taskflow/app/app.py
           python -m py_compile taskflow/app/models.py
           python -m py_compile taskflow/app/forms.py
 
       - name: Build Docker image
-        run: docker build -t taskflow-app ./app
+        run: docker build -t taskflow-app ./taskflow/app
